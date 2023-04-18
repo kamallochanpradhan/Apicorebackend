@@ -1,0 +1,65 @@
+﻿
+Solution Name: MyAspCoreAppln
+Application Name: AngularCrudApl1
+Database Name: AngularCrudApl1
+Table Name: Student
+Approach:  Entity Framework Code First Approach
+GitHub:  Planning to create a repository in git and push changes
+Angular: Planning to merge this api with Angular application
+
+URL:  //////
+------------------------------------------------------------
+------------------------------------------------------------
+
+http://localhost:5176/api/Student/GetStudent       --Get
+---------------------------------------------------------------
+
+http://localhost:5176/api/Student/InsertStudent    --Post
+---------------------------------------------------------------
+{
+    "Password": 456,
+    "StudentName": "bimal",
+    "Email": "bimal@1989",
+    "DateOfBirth": "1989-04-04",
+    "Gender": "F",
+    "Address": "kendrapara",
+    "Pin": 654456
+}
+-----------------------------------------------------------------
+http://localhost:5176/api/Student/UpdateStudent    --put
+-----------------------------------------------------------------
+
+{
+    "Id":1,
+    "Password": 123,
+    "StudentName": "kamal",
+    "Email": "kamallochan@1989",
+    "DateOfBirth": "1989-04-04",
+    "Gender": "M",
+    "Address": "Pattamundai",
+    "Pin": 754215
+}
+-----------------------------------------------------------------------
+http://localhost:5176/api/Student/DeleteStudent?Id=2    --Delete
+------------------------------------------------------------------------
+
+http://localhost:5176/api/Student/GetStudentByID/3      --GetStudentById   --Get
+---------------------------------------------------------------------------------------
+
+{
+    "id": 3,
+    "password": 123,
+    "studentName": "Bimal",
+    "email": "Bimal@1989",
+    "dateOfBirth": "1988-04-04T00:00:00",
+    "gender": "F",
+    "address": "Kendrapara",
+    "pin": 654734
+}
+
+
+select Params in Postman and give Id and value as 2 thensend
+
+This AngularCrudApl1 project I created in Code first approach and also properly tested in Postman.
+Its working fine. I did CRUD using Postman. 
+
