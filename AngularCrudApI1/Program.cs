@@ -32,9 +32,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseMiddleware<ErrorHandlerMiddleWare>();
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
