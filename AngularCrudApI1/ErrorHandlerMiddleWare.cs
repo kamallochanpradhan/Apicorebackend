@@ -33,10 +33,12 @@
          */
 
         private readonly RequestDelegate _next;
+        private readonly ILogger<ErrorHandlerMiddleWare> _logger;
 
-        public ErrorHandlerMiddleWare(RequestDelegate next)
+        public ErrorHandlerMiddleWare(RequestDelegate next, ILogger<ErrorHandlerMiddleWare> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         /*
@@ -51,19 +53,21 @@
 
             try
             {
-
                 //Call the next middleware in the pipeline
                 await _next(context);
             }
             catch (Exception ex)
             {
-                // Handle the exception and modify the response
+                // Handle the exception and modify the respoanse
                 context.Response.Clear();
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "text/plain";
 
                 // Write the error message to the response
                 await context.Response.WriteAsync($"An error occurred: {ex.Message}");
+
+                _logger.LogInformation("Log my exception here");
+
             }
         }
     }
