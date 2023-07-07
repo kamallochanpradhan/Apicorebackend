@@ -1,16 +1,94 @@
 using AngularCrudApI1;
 using AngularCrudApI1.Repository;
+using AngularCrudApI1.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 // Add services to the container.
 //just checking
 
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "JWTRefreshTokens", Version = "v1" });
+
+    /*This configuration is saying we are telling swagger we want to use 
+     * authorization based on this defination*/
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "This site uses Bearrer token and you have to pass" +
+        "Its a Bearer<<space>>Token",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    }); 
+
+   /* This configuration is saying here swagger will use the token passed from UI and it 
+    * will give the token to controller*/
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {{
+        new OpenApiSecurityScheme
+        {
+            Reference=new OpenApiReference
+            {
+                Type=ReferenceType.SecurityScheme,
+                Id="Bearer",
+            },
+            Scheme="oauth2",
+            Name="Bearer",
+            In=ParameterLocation.Header
+        },
+        new List<string>()
+    }
+    });
+});
+
+var jwtKey = configuration["JwtSettings:Key"];
+//var jwtKey = Configuration.GetValue<string>("JwtSettings:Key");
+var keyBytes = Encoding.ASCII.GetBytes(jwtKey);
+
+TokenValidationParameters tokenValidation = new TokenValidationParameters
+{
+    IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+    ValidateLifetime = true,
+    //if you use any delegated permission then you can ,,,but i dont have so false
+    ValidateAudience = false,
+    /*if you use any azure kind of environment ,where same token
+    //can use for multiple tennant people*/
+    ValidateIssuer = false,
+    /*if by default token expire jwt toke give 5min grace period...but we dont want
+     * so zero*/
+    ClockSkew= TimeSpan.Zero,
+};
+
+builder.Services.AddSingleton(tokenValidation);
+
+builder.Services.AddAuthentication(authOptions =>
+{
+    authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(jwtOptions =>
+{
+    jwtOptions.TokenValidationParameters = tokenValidation;
+});
+   
+
+
+
+//Dependencies mapping of service and interface here
+builder.Services.AddTransient<IjwtService, JwtService>();
+
 
 builder.Services.AddScoped<IStudenttRepository, StudenttRepository>();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -33,6 +111,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<ErrorHandlerMiddleWare>();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

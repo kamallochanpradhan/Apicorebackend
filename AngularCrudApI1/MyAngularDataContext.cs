@@ -1,4 +1,5 @@
-﻿using AngularCrudApI1.Model;
+﻿using AngularCrudApI1.Entities;
+using AngularCrudApI1.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace AngularCrudApI1
@@ -12,5 +13,7 @@ namespace AngularCrudApI1
         }
 
         public DbSet<Student> Students { get; set; }
+
+        public DbSet<User> Users { get; set; }
     }
 }
