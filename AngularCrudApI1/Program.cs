@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 
@@ -55,18 +56,20 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var jwtKey = configuration["JwtSettings:Key"];
-//var jwtKey = Configuration.GetValue<string>("JwtSettings:Key");
 var keyBytes = Encoding.ASCII.GetBytes(jwtKey);
 
 TokenValidationParameters tokenValidation = new TokenValidationParameters
 {
     IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
     ValidateLifetime = true,
+
     //if you use any delegated permission then you can ,,,but i dont have so false
     ValidateAudience = false,
+
     /*if you use any azure kind of environment ,where same token
     //can use for multiple tennant people*/
     ValidateIssuer = false,
+
     /*if by default token expire jwt toke give 5min grace period...but we dont want
      * so zero*/
     ClockSkew= TimeSpan.Zero,
@@ -80,7 +83,20 @@ builder.Services.AddAuthentication(authOptions =>
     authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(jwtOptions =>
 {
+    //custom validation done doing Jwt events
+    //here we have passed the tokenValidation parameter
     jwtOptions.TokenValidationParameters = tokenValidation;
+    jwtOptions.Events = new JwtBearerEvents();
+    jwtOptions.Events.OnTokenValidated = async (context) =>
+      {
+          var ipAddress = context.Request.HttpContext.Connection.RemoteIpAddress.ToString();
+          var jwtService = context.Request.HttpContext.RequestServices.GetService<IjwtService>();
+          var jwtToken = context.SecurityToken as JwtSecurityToken;
+
+          if (!await jwtService.IsTokenValid(jwtToken.RawData, ipAddress))
+              context.Fail("Invalid Token Details");
+      };
+
 });
    
 

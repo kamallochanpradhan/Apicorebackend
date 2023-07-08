@@ -15,5 +15,7 @@ namespace AngularCrudApI1.Entities
 
         [Key]
         public int UserId { get; set; }
+
+        public List<UserRefreshToken> UserRefreshTokens { get; set; }
     }
 }

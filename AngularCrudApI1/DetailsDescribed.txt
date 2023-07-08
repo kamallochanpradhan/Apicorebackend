@@ -63,3 +63,16 @@ select Params in Postman and give Id and value as 2 thensend
 This AngularCrudApl1 project I created in Code first approach and also properly tested in Postman.
 Its working fine. I did CRUD using Postman. 
 
+
+What is refresh Token and why do we need it
+------------------------------------------------
+Refresh token is another type of token that is used to regenerate the expire access token 
+
+
+As per the JWT Specification Refresh token mustt be preserved in the database so that wil be easier to validate
+
+Migration Command
+-----------------------
+
+Add-Migration refreshtokenmigration     (command for migration)
+Update-Database    (after migration command for update in db)
