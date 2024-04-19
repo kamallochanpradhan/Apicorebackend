@@ -7,9 +7,22 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-
+using Serilog;
+//E:\CGI\TESTINGPURPOSE\MyAspCoreAppln\AngularCrudApI1\Logs\
 
 var builder = WebApplication.CreateBuilder(args);
+#region All Serilog Configurationhere
+
+var logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/MyAppllog.txt", rollingInterval: RollingInterval.Day)
+    .MinimumLevel.Information()
+    .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+
+#endregion
 var configuration = builder.Configuration;
 
 // Add services to the container.
