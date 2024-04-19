@@ -1,4 +1,6 @@
-﻿namespace AngularCrudApI1
+﻿using Microsoft.AspNetCore.Http;
+
+namespace AngularCrudApI1
 {
     public class ErrorHandlerMiddleWare
     {
@@ -58,6 +60,9 @@
             }
             catch (Exception ex)
             {
+                // unique id created because based on uniqueid we will log and check the error
+                var errorId = Guid.NewGuid();
+
                 // Handle the exception and modify the respoanse
                 context.Response.Clear();
                 context.Response.StatusCode = 500;
@@ -66,8 +71,18 @@
                 // Write the error message to the response
                 await context.Response.WriteAsync($"An error occurred: {ex.Message}");
 
-                _logger.LogInformation("Log my exception here");
+                _logger.LogInformation("You can See Global Exception here: ******* ******** ******** ******* ******** ");
+                _logger.LogError(ex, $"{errorId} : { ex.Message}");
 
+                #region Here I am just customizing the error for End user to show..Instead of showing all error
+                var error = new
+                {
+                    Id = errorId,
+                    ErrorMessage = "Something went wrong we are looking into htis resolving this"
+                };
+
+                context.Response.WriteAsJsonAsync(error);
+                #endregion
             }
         }
     }

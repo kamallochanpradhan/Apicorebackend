@@ -6,7 +6,7 @@ using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 /*Serilog used form udemy 
- https://www.udemy.com/course/build-rest-apis-with-aspnet-core-web-api-entity-framework/learn/lecture/37067262#overview*/ 
+ https://www.udemy.com/course/build-rest-apis-with-aspnet-core-web-api-entity-framework/learn/lecture/37067262#overview*/
 
 namespace AngularCrudApI1.Controllers
 {
@@ -39,17 +39,24 @@ namespace AngularCrudApI1.Controllers
          * resources based on defined policies, roles, or custom requirements.*/
 
         // here Authorize attribute used to authenticate
-       // [Authorize]
+        // [Authorize]
         [HttpGet]
         [Route("GetStudent")]
         public async Task<IActionResult> Get()
-        {         
+        {
+            #region Code Which Will Produce error
+            //int x = 0;
+            //int y = 5;
+            //int result = y / x; // This line will produce an error at runtime
+           // Console.WriteLine(result);
+            #endregion
+
             logger.LogInformation("GetStudent Action method Invoked");
             var stdData = await _student.GetStudent();
             return Ok(stdData);
 
             /*JsonSerializer.Serialize(stdData) will convert the stdData object into json data*/
-            logger.LogInformation($"Finished GetStudent Action method all data: {JsonSerializer.Serialize(stdData)}");   
+            logger.LogInformation($"Finished GetStudent Action method all data: {JsonSerializer.Serialize(stdData)}");
         }
 
 
