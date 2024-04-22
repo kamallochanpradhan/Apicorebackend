@@ -120,6 +120,7 @@ builder.Services.AddTransient<IjwtService, JwtService>();
 
 
 builder.Services.AddScoped<IStudenttRepository, StudenttRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<MyAngularDataContext>(x => x.UseSqlServer(connectionString));
 

@@ -17,5 +17,7 @@ namespace AngularCrudApI1
         public DbSet<User> Users { get; set; }
 
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
+
+        public DbSet<Product> Products { get; set; }
     }
 }
