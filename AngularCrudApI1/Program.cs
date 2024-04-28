@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Serilog;
+using AngularCrudApI1.Middleware;
 //E:\CGI\TESTINGPURPOSE\MyAspCoreAppln\AngularCrudApI1\Logs\
 
 var builder = WebApplication.CreateBuilder(args);
@@ -141,6 +142,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseMiddleware<ErrorHandlerMiddleWare>();
+
+// This custom  Middleware I created using MiddleWare Template in Net where we have
+//Extention method automatically creted
+app.UseHelloCustomMiddleware();
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -1,0 +1,27 @@
+﻿
+The Right Order of Middleware
+---------------------------------
+app.UseExceptionHandler("/Error");
+app.UseHsts();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseSession();
+app.MapControllers();
+//add your custom middlewares
+app.Run();
+------------------------------------
+Middleware - UseWhen
+------------------------------------
+app.UseWhen(
+  context => { return boolean; },
+  app =>
+  {
+    //add your middlewares
+  }
+);
+The extension method called “UseWhen” is used to execute a branch 
+of middleware only when the specified condition is true.

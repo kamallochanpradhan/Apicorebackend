@@ -10,13 +10,13 @@
   },
   "profiles": {
     "AngularCrudApI1": {
-      "commandName": "Project",
-      "dotnetRunMessages": true,
+      "commandName": "Project", /*Means here I want to use Kestrel Server only*/
+      "dotnetRunMessages": true, /*Means you can use .Net command in terminal..*/
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "applicationUrl": "http://localhost:5176",
+      "applicationUrl": "http://localhost:5176", /*You can give any other port no greter than 1024 and less than 65536,because 0 to 1024 used by OPERATING SYSTEM*/
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development" /**/
       }
     },
     "IIS Express": {
