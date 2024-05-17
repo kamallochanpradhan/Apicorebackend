@@ -69,7 +69,7 @@ namespace AngularCrudApI1.Controllers
         }
 
 
-        // POST api/<StudentController>
+        // POST api/<StudentController>s
         [HttpPost]
         [Route("InsertStudent")]
         public async Task<IActionResult> Post(Student std)
@@ -83,6 +83,37 @@ namespace AngularCrudApI1.Controllers
             return Ok("Added Successfully");
         }
 
+
+        [HttpPost]
+        [Route("process")]
+        public IActionResult ProcessRequest([FromBody] Product requestModel, [FromHeader] string Authorization88, [FromHeader] string ContentType)
+        {
+            if (requestModel == null)
+            {
+                return BadRequest(new ErrorResponse { StatusCode = 400, Message = "Request model cannot be null." });
+            }
+            try
+            {
+                Console.WriteLine("Authorization88", Authorization88);
+                Console.WriteLine("ContentType", ContentType);
+            }
+        
+            catch (Exception ex)
+            {
+                // Log the exception if needed
+
+                // Return an error response with status code and message
+                return StatusCode(500, new ErrorResponse { StatusCode = 500, Message = ex.Message });
+            }
+
+            // Do something with the request model and headers
+             Console.WriteLine($"Received request with Pname: {requestModel.Pname}, Prid: {requestModel.Prid}");
+             Console.WriteLine($"Authorization Header: {authToken}");
+             Console.WriteLine($"Content-Type Header: {contentType}");
+
+            // Return a success response
+            return Ok("Request processed successfully.");
+        }
 
         // PUT api/<StudentController>/5
         [HttpPut]
