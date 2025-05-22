@@ -110,8 +110,7 @@ namespace AngularCrudApI1.Controllers
 
             // Do something with the request model and headers
              Console.WriteLine($"Received request with Pname: {requestModel.Pname}, Prid: {requestModel.Prid}");
-             Console.WriteLine($"Authorization Header: {authToken}");
-             Console.WriteLine($"Content-Type Header: {contentType}");
+            
 
             // Return a success response
             return Ok("Request processed successfully.");

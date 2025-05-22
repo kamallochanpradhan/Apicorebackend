@@ -85,3 +85,7 @@ Migration Command
 
 Add-Migration refreshtokenmigration     (command for migration)
 Update-Database    (after migration command for update in db)
+
+Suppose if you are not in the exat path in command prompt then 
+
+cd E:\CGI\TESTINGPURPOSE\MyAspCoreAppln\AngularCrudApI1
