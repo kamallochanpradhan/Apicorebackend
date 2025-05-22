@@ -129,7 +129,7 @@ namespace AngularCrudApI1.Services
                 }),
 
                 //Here we give the Expiration time
-                Expires = DateTime.UtcNow.AddSeconds(90),
+                Expires = DateTime.UtcNow.AddSeconds(60),
 
                 //Algorith for encrypting the tooken
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(keyBytes), SecurityAlgorithms.HmacSha256)

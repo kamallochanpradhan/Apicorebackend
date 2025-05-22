@@ -7,8 +7,17 @@ Approach:  Entity Framework Code First Approach
 GitHub:  Planning to create a repository in git and push changes
 Angular: Planning to merge this api with Angular application
 
+
+
 URL:  //////
 ------------------------------------------------------------
+http://localhost:5176/api/Account/AuthToken   --To get token and refreshtoken
+
+"userName": "Test",
+"password": "Password"
+----------------------------------------------------
+Swagger URL:
+http://localhost:5176/swagger/index.html   
 ------------------------------------------------------------
 
 http://localhost:5176/api/Student/GetStudent       --Get

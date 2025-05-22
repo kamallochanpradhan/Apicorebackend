@@ -38,7 +38,8 @@ namespace AngularCrudApI1.Controllers
             return Ok(authResponse);
 
         }
-
+    /*This endpoint:Receives an object with:ExpiredToken and RefreshToken,Validates the request then Finds the token in DB (UserRefreshTokens)
+     * based on:Token, RefreshToken  and IP address.Marks the old token as invalid.Generates new tokens and returns them.*/
         /// <summary>
         /// Get the refresh token request..for refresh token we need expiration and refresh token
         /// </summary>
@@ -59,7 +60,12 @@ namespace AngularCrudApI1.Controllers
             AuthResponse response = ValidateDetails(token, userRefreshToken);
             if(!response.IsSuccess)
                 return BadRequest(response);
-
+            /*When user logs out:Frontend clears tokens and Backend sets IsInvalidated = true for the token in DB.*/
+            /*In your DB, the IsInvalidated column is a boolean:
+             * false (or 0) → Token is still valid
+             * true (or 1) → Token has been revoked (e.g., on logout or suspicious activity).
+             * If it's true, then the token has been 
+             * explicitly blocked by the server — even if it's not expired yet.*/
             userRefreshToken.IsInvalidated = true;
             _appDBContext.UserRefreshTokens.Update(userRefreshToken);
             await _appDBContext.SaveChangesAsync();
@@ -88,3 +94,16 @@ namespace AngularCrudApI1.Controllers
         }
     }
 }
+
+/*✅ Flow when access token expires:
+Access token (valid for 2 mins) expires.
+
+Angular app sends a new request → gets a 401 Unauthorized.
+
+Angular's AuthInterceptor kicks in and sends the refresh token to get a new access token.
+
+If refresh token is still valid (within 20 minutes), backend sends a new access token + new refresh token.
+
+Angular retries the original request with new access token → ✅ works.
+
+*/

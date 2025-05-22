@@ -72,13 +72,14 @@ builder.Services.AddSwaggerGen(c =>
 var jwtKey = configuration["JwtSettings:Key"];
 var keyBytes = Encoding.ASCII.GetBytes(jwtKey);
 
+# region This section is for validating JWTs when requests come in (e.g., a protected API endpoint is hit):
 TokenValidationParameters tokenValidation = new TokenValidationParameters
 {
-    IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+    IssuerSigningKey = new SymmetricSecurityKey(keyBytes),// How the token signature is verified
     ValidateLifetime = true,
 
     //if you use any delegated permission then you can ,,,but i dont have so false
-    ValidateAudience = false,
+    ValidateAudience = false, // Ensures token is not expired
 
     /*if you use any azure kind of environment ,where same token
     //can use for multiple tennant people*/
@@ -86,11 +87,13 @@ TokenValidationParameters tokenValidation = new TokenValidationParameters
 
     /*if by default token expire jwt toke give 5min grace period...but we dont want
      * so zero*/
-    ClockSkew= TimeSpan.Zero,
+    ClockSkew= TimeSpan.Zero, // No grace period on expiry
 };
 
+#endregion
 builder.Services.AddSingleton(tokenValidation);
 
+#region This tells ASP.NET Core to use JWT for authentication:
 builder.Services.AddAuthentication(authOptions =>
 {
     authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -103,17 +106,17 @@ builder.Services.AddAuthentication(authOptions =>
     jwtOptions.Events = new JwtBearerEvents();
     jwtOptions.Events.OnTokenValidated = async (context) =>
       {
-          var ipAddress = context.Request.HttpContext.Connection.RemoteIpAddress.ToString();
-          var jwtService = context.Request.HttpContext.RequestServices.GetService<IjwtService>();
-          var jwtToken = context.SecurityToken as JwtSecurityToken;
+   var ipAddress = context.Request.HttpContext.Connection.RemoteIpAddress.ToString();
+   var jwtService = context.Request.HttpContext.RequestServices.GetService<IjwtService>();
+   var jwtToken = context.SecurityToken as JwtSecurityToken;// context.SecurityToken gives you the token sent by the client in the Authorization: Bearer ... header.
 
           if (!await jwtService.IsTokenValid(jwtToken.RawData, ipAddress))
               context.Fail("Invalid Token Details");
       };
 
 });
-   
 
+#endregion
 
 
 //Dependencies mapping of service and interface here
